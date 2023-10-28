@@ -1,0 +1,43 @@
+---
+- name: Update Grafana Repository Key
+  command: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Update APT Cache
+  apt:
+    update_cache: yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install Java
+  apt:
+    name: openjdk-11-jdk
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Add Elasticsearch GPG Key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install Elasticsearch
+  apt_repository:
+    repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
+    state: present
+    filename: elasticsearch-7.x
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install Elasticsearch
+  yum_repository:
+    name: elasticsearch-7.x
+    description: Elasticsearch repository for 7.x packages
+    baseurl: https://artifacts.elastic.co/packages/7.x/yum
+    gpgcheck: 1
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  when: ansible_distribution == 'CentOS'
+
+- name: Install Elasticsearch
+  package:
+    name: elasticsearch
+    state: present
+  vars:
+    ansible_python_interpreter: /usr/bin/python3

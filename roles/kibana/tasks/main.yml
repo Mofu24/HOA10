@@ -1,0 +1,13 @@
+---
+- name: Install Kibana on Ubuntu
+  apt:
+    name: kibana
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install Kibana on CentOS
+  yum:
+    name: kibana
+    state: present
+  when: ansible_distribution == 'CentOS'
+
